@@ -8,6 +8,7 @@
 ## > m <- makeCacheMatrix(matrix(c(0, 1, 4, 1, 0, -3, 2, 3, 8), 3, 3))
 ## > cacheSolve(m)
 ## > m$getinverse()
+## > m$Getinvers() %*% cacheSolve(m)
 
 ## makeCacheMatrix creates a memoized matrix "object" that can cache the results of solving 
 ## for the inverse. The "object" created by this fucntion is really a list of four accessor
@@ -48,15 +49,15 @@ makeCacheMatrix <- function(x = matrix()) {
 ## Returns: the inverse of the matrix, x
 
 cacheSolve <- function(x, ...) {
-    m <- x$getinverse()
+    x.inv <- x$getinverse()
     # if the inverse has been cached, return it
-    if(!is.null(m)) {
+    if(!is.null(x.inv)) {
             message("getting cached data")
-            return(m)
+            return(x.inv)
     }
     # otherwise, get the actual matrix and use solve() to compute the inverse
     data <- x$get()
-    m <- solve(data, ...)
-    x$setinverse(m)    # cache the result
-    m
+    x.inv <- solve(data, ...)
+    x$setinverse(x.inv)    # cache the result
+    x.inv
 }
